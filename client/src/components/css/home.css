@@ -1,0 +1,17 @@
+.home_container {
+    display: flex;
+    height: 750px;
+  }
+  
+  .side_bar {
+    flex: 1;
+    background-color: red;
+    height: 750px;
+  }
+  
+  .main_content {
+    flex: 8; /* Updated flex value to 1 */
+    height: 750px;
+    background-color: #302E2B;
+  }
+  

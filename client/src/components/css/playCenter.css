@@ -1,0 +1,11 @@
+.play_center_container {
+  display: flex;
+  width: 81%;
+  padding: 1.1% 0;
+  margin-left: 45px;
+  height: 96%;
+}
+.game_layout{
+  width: 60%;
+  height: 100%;
+}
