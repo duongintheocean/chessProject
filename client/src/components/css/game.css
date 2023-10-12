@@ -29,6 +29,8 @@
   margin: 8px 0;
   border-radius: 4px;
   overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
 }
 .player_name{
     color: white;
