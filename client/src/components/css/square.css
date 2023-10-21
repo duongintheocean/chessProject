@@ -16,7 +16,17 @@
   background-color: #ebecd0;
 }
 .active_square {
-  background-color: rgb(76, 76, 76, 0.2);
+  background-color: red;
+  width: 100%;
+  height: 100%;
+}
+.chess_has_active_white_square{
+  background-color: rgb(244,246,128);
+  width: 100%;
+  height: 100%;
+}
+.chess_has_active_black_square{
+  background-color: #BBCC44;
   width: 100%;
   height: 100%;
 }
