@@ -9,6 +9,7 @@ import {
   Queen,
   Rock,
   Bishop,
+  King,
 } from "../class/chessClass";
 
 export default function Game() {
@@ -34,7 +35,10 @@ export default function Game() {
       chessPossition: { x: 4, y: 8 },
       currentChess: new Queen("black", 9, { x: 4, y: 8 }),
     },
-    { chessPossition: { x: 5, y: 8 }, currentChess: null },
+    {
+      chessPossition: { x: 5, y: 8 },
+      currentChess: new King("black", 9, { x: 5, y: 8 }, false),
+    },
     {
       chessPossition: { x: 6, y: 8 },
       currentChess: new Bishop("black", 3, { x: 6, y: 8 }),
@@ -159,7 +163,10 @@ export default function Game() {
       chessPossition: { x: 4, y: 1 },
       currentChess: new Queen("white", 9, { x: 4, y: 1 }),
     },
-    { chessPossition: { x: 5, y: 1 }, currentChess: null },
+    {
+      chessPossition: { x: 5, y: 1 },
+      currentChess: new King("white", 10, { x: 5, y: 1 }, false),
+    },
     {
       chessPossition: { x: 6, y: 1 },
       currentChess: new Bishop("white", 3, { x: 6, y: 1 }),
@@ -250,7 +257,6 @@ export default function Game() {
           }
         }
       }
-
       setAvailableMove(moveExpression);
     } else if (currentChessActive instanceof Pawn) {
       let moveExpression = currentChessActive.moveExpression();
@@ -346,6 +352,7 @@ export default function Game() {
       setAvailableMove(moveExpression);
     } else if (currentChessActive instanceof Bishop) {
       let moveAble = currentChessActive.moveExpression();
+      let removeMoveAble: { x: number; y: number }[] = [];
       for (let i = 0; i < chessSquare.length; i++) {
         if (chessSquare[i].currentChess !== null) {
           for (let j = 0; j < moveAble.length; j++) {
@@ -355,34 +362,155 @@ export default function Game() {
             ) {
               if (chessSquare[i].currentChess !== null) {
                 if (
-                  chessSquare[i].currentChess?.side === currentChessActive.side
+                  moveAble[j].x > currentChessActive.chessPosition.x &&
+                  moveAble[j].y > currentChessActive.chessPosition.y
+                ) {
+                  removeMoveAble = removeMoveAble.concat(
+                    moveAble.filter((e) => {
+                      return e.x > moveAble[j].x && e.y > moveAble[j].y;
+                    })
+                  );
+
+                  break;
+                } else if (
+                  moveAble[j].x < currentChessActive.chessPosition.x &&
+                  moveAble[j].y < currentChessActive.chessPosition.y
+                ) {
+                  removeMoveAble = removeMoveAble.concat(
+                    moveAble.filter((e) => {
+                      return e.x < moveAble[j].x && e.y < moveAble[j].y;
+                    })
+                  );
+                  break;
+                } else if (
+                  moveAble[j].x < currentChessActive.chessPosition.x &&
+                  moveAble[j].y > currentChessActive.chessPosition.y
+                ) {
+                  removeMoveAble = removeMoveAble.concat(
+                    moveAble.filter((e) => {
+                      return e.x < moveAble[j].x && e.y > moveAble[j].y;
+                    })
+                  );
+                  break;
+                } else if (
+                  moveAble[j].x < currentChessActive.chessPosition.x &&
+                  moveAble[j].y > currentChessActive.chessPosition.y
+                ) {
+                  removeMoveAble = removeMoveAble.concat(
+                    moveAble.filter((e) => {
+                      return e.x < moveAble[j].x && e.y > moveAble[j].y;
+                    })
+                  );
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+      moveAble = moveAble.filter((e) => {
+        return removeMoveAble.includes(e) === false;
+      });
+      setAvailableMove(moveAble);
+    } else if (currentChessActive instanceof Queen) {
+      let moveAble = currentChessActive.moveExpression();
+      let removeMoveAble: { x: number; y: number }[] = [];
+      for (let i = 0; i < chessSquare.length; i++) {
+        if (chessSquare[i].currentChess !== null) {
+          for (let j = 0; j < moveAble.length; j++) {
+            if (
+              chessSquare[i].chessPossition.x === moveAble[j].x &&
+              chessSquare[i].chessPossition.y === moveAble[j].y
+            ) {
+              if (chessSquare[i].currentChess !== null) {
+                if (
+                  moveAble[j].x > currentChessActive.chessPosition.x &&
+                  moveAble[j].y > currentChessActive.chessPosition.y
+                ) {
+                  removeMoveAble = removeMoveAble.concat(
+                    moveAble.filter((e) => {
+                      return e.x > moveAble[j].x && e.y > moveAble[j].y;
+                    })
+                  );
+
+                  break;
+                } else if (
+                  moveAble[j].x < currentChessActive.chessPosition.x &&
+                  moveAble[j].y < currentChessActive.chessPosition.y
+                ) {
+                  removeMoveAble = removeMoveAble.concat(
+                    moveAble.filter((e) => {
+                      return e.x < moveAble[j].x && e.y < moveAble[j].y;
+                    })
+                  );
+                  break;
+                } else if (
+                  moveAble[j].x < currentChessActive.chessPosition.x &&
+                  moveAble[j].y > currentChessActive.chessPosition.y
+                ) {
+                  removeMoveAble = removeMoveAble.concat(
+                    moveAble.filter((e) => {
+                      return e.x < moveAble[j].x && e.y > moveAble[j].y;
+                    })
+                  );
+                  break;
+                } else if (
+                  moveAble[j].x < currentChessActive.chessPosition.x &&
+                  moveAble[j].y > currentChessActive.chessPosition.y
+                ) {
+                  removeMoveAble = removeMoveAble.concat(
+                    moveAble.filter((e) => {
+                      return e.x < moveAble[j].x && e.y > moveAble[j].y;
+                    })
+                  );
+                  break;
+                } else if (
+                  moveAble[j].x === currentChessActive.chessPosition.x
+                ) {
+                  if (moveAble[j].y > currentChessActive.chessPosition.y) {
+                    removeMoveAble = removeMoveAble.concat(
+                      moveAble.filter((e) => {
+                        return (
+                          e.x === currentChessActive.chessPosition.x &&
+                          e.y > moveAble[j].y
+                        );
+                      })
+                    );
+                  } else if (
+                    moveAble[j].y < currentChessActive.chessPosition.y
+                  ) {
+                    removeMoveAble = removeMoveAble.concat(
+                      moveAble.filter((e) => {
+                        return (
+                          e.x === currentChessActive.chessPosition.x &&
+                          e.y < moveAble[j].y
+                        );
+                      })
+                    );
+                  }
+                } else if (
+                  moveAble[j].y === currentChessActive.chessPosition.y
                 ) {
                   if (moveAble[j].x > currentChessActive.chessPosition.x) {
-                    moveAble = moveAble.filter((e) => {
-                      return e.x < moveAble[j].x;
-                    });
-                    break;
+                    removeMoveAble = removeMoveAble.concat(
+                      moveAble.filter((e) => {
+                        return (
+                          e.y === currentChessActive.chessPosition.y &&
+                          e.x > moveAble[j].x
+                        );
+                      })
+                    );
                   } else if (
                     moveAble[j].x < currentChessActive.chessPosition.x
                   ) {
-                    moveAble = moveAble.filter((e) => {
-                      return e.x > moveAble[j].x;
-                    });
-                    break;
-                  }
-                } else {
-                  if (moveAble[j].x > currentChessActive.chessPosition.x) {
-                    moveAble = moveAble.filter((e) => {
-                      return e.x <= moveAble[j].x;
-                    });
-                    break;
-                  } else if (
-                    moveAble[j].x < currentChessActive.chessPosition.x
-                  ) {
-                    moveAble = moveAble.filter((e) => {
-                      return e.x >= moveAble[j].x;
-                    });
-                    break;
+                    removeMoveAble = removeMoveAble.concat(
+                      moveAble.filter((e) => {
+                        return (
+                          e.y === currentChessActive.chessPosition.y &&
+                          e.x < moveAble[j].x
+                        );
+                      })
+                    );
                   }
                 }
               }
@@ -390,32 +518,17 @@ export default function Game() {
           }
         }
       }
+      moveAble = moveAble.filter((e) => {
+        return removeMoveAble.includes(e) === false;
+      });
       setAvailableMove(moveAble);
-    } else if (currentChessActive instanceof Queen) {
-      let moveAble = currentChessActive.moveExpression();
-      let rockMove: { x: number; y: number }[] = [];
-      let bishopMove: { x: number; y: number }[] = [];
-      for (let i = 0; i < chessSquare.length; i++) {
-        if (chessSquare[i].currentChess !== null) {
-          for (let j = 0; j < moveAble.length; j++) {
-            if (
-              moveAble[j].x === chessSquare[i].chessPossition.x &&
-              moveAble[j].y === chessSquare[i].chessPossition.y
-            ) {
-              if (
-                chessSquare[i].currentChess?.side === currentChessActive.side
-              ) {
-               
-              } else {
-              
-              }
-            }
-          }
-        }
+    } else if (currentChessActive instanceof King) {
+      let moveAble: { x: number; y: number }[] =
+        currentChessActive.moveExpression();
+      if (currentChessActive.haveMove===false) {
+        
       }
-      console.log(rockMove, "rockmove", bishopMove, "bishopmove");
-
-      setAvailableMove(rockMove.concat(bishopMove));
+      setAvailableMove(moveAble);
     } else {
       setAvailableMove([]);
     }
@@ -496,6 +609,16 @@ export default function Game() {
         currentChessActive.side,
         currentChessActive.chessPoint,
         { x: moveToChessSquare.x, y: moveToChessSquare.y }
+      );
+      newChessSquare[moveIndex].currentChess = newChessMoveTo;
+      newChessSquare[currentIndex].currentChess = null;
+      setChessSquare(newChessSquare);
+    } else if (currentChessActive instanceof King) {
+      const newChessMoveTo = new King(
+        currentChessActive.side,
+        currentChessActive.chessPoint,
+        { x: moveToChessSquare.x, y: moveToChessSquare.y },
+        true
       );
       newChessSquare[moveIndex].currentChess = newChessMoveTo;
       newChessSquare[currentIndex].currentChess = null;

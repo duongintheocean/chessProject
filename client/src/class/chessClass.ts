@@ -8,6 +8,8 @@ import whiteRockImg from "../img/chess_piece/rook_w.png";
 import blackRockImg from "../img/chess_piece/rook_b.png";
 import whiteBishopImg from "../img/chess_piece/bishop_w.png";
 import blackBishopImg from "../img/chess_piece/bishop_b.png";
+import blackKingImg from "../img/chess_piece/king_b.png";
+import whiteKingImg from "../img/chess_piece/king_w.png";
 export abstract class ChessPiece {
   side: "white" | "black";
   chessPoint: number;
@@ -218,4 +220,49 @@ export class Queen extends ChessPiece {
     }
     return moveAble;
   }
+}
+export class King extends ChessPiece {
+  haveMove: boolean;
+  constructor(
+    chessSide: "white" | "black",
+    chessPoint: number,
+    chessPosition: { x: number; y: number },
+    haveMove: boolean
+  ) {
+    super(chessSide, chessPoint, chessPosition);
+    this.haveMove = haveMove;
+    if (this.side === "white") {
+      this.chessImg = whiteKingImg;
+    } else {
+      this.chessImg = blackKingImg;
+    }
+  }
+  override moveExpression() {
+    let moveAble: { x: number; y: number }[] = [
+      { x: this.chessPosition.x + 1, y: this.chessPosition.y + 1 },
+      { x: this.chessPosition.x, y: this.chessPosition.y + 1 },
+      { x: this.chessPosition.x + 1, y: this.chessPosition.y },
+    ];
+
+    if (this.chessPosition.x - 1 > 0) {
+      moveAble.push(
+        { x: this.chessPosition.x - 1, y: this.chessPosition.y + 1 },
+        { x: this.chessPosition.x - 1, y: this.chessPosition.y }
+      );
+    }
+    if (this.chessPosition.y - 1 > 0) {
+      moveAble.push(
+        { x: this.chessPosition.x + 1, y: this.chessPosition.y - 1 },
+        { x: this.chessPosition.x, y: this.chessPosition.y - 1 }
+      );
+    }
+    if (this.chessPosition.y - 1 > 0 && this.chessPosition.x - 1 > 0) {
+      moveAble.push({
+        x: this.chessPosition.x - 1,
+        y: this.chessPosition.y - 1,
+      });
+    }
+    return moveAble
+  }
+  
 }
