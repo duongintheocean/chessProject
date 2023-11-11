@@ -13,6 +13,7 @@ import {
 } from "../class/chessClass";
 
 export default function Game() {
+  const [turn, setTurn] = useState<string>("white");
   const [chessSquare, setChessSquare] = useState<
     {
       chessPossition: { x: number; y: number };
@@ -525,8 +526,7 @@ export default function Game() {
     } else if (currentChessActive instanceof King) {
       let moveAble: { x: number; y: number }[] =
         currentChessActive.moveExpression();
-      if (currentChessActive.haveMove===false) {
-        
+      if (currentChessActive.haveMove === false) {
       }
       setAvailableMove(moveAble);
     } else {
@@ -539,6 +539,9 @@ export default function Game() {
   }, [JSON.stringify(currentChessActive)]);
 
   const handleMoveChess = (moveToChessSquare: { x: number; y: number }) => {
+    if (currentChessActive?.side !== turn) {
+      return;
+    }
     const currentIndex = chessSquare.findIndex((e) => {
       return (
         e.chessPossition.x === currentChessActive?.chessPosition.x &&
@@ -626,6 +629,11 @@ export default function Game() {
     }
     setCurrentChessActive(null);
     setAvailableMove([]);
+    if (turn === "white") {
+      setTurn("black");
+    } else {
+      setTurn("white");
+    }
   };
   return (
     <div className="game_container">
